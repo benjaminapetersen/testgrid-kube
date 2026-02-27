@@ -1,5 +1,5 @@
 import { html, TemplateResult } from 'lit';
-import '../src/testgrid-group-summary.js';
+import '../src/components/group-summary/group-summary.js';
 
 export default {
   title: 'Dashboard Group View',

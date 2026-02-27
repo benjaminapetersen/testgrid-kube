@@ -1,6 +1,6 @@
 import { html, TemplateResult } from 'lit';
 import { TestStatus } from '../src/gen/pb/test_status/test_status.js';
-import '../src/testgrid-grid-cell.js';
+import '../src/components/grid-cell/grid-cell.js';
 
 export default {
   title: 'Grid Cell',

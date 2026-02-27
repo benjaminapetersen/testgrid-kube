@@ -1,5 +1,5 @@
 import { html, TemplateResult } from 'lit';
-import '../src/testgrid-index.js';
+import '../src/components/index/index.js';
 
 export default {
   title: 'Index',

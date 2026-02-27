@@ -1,5 +1,5 @@
 import { html, TemplateResult } from 'lit';
-import '../src/tab-summary.js';
+import '../src/components/tab-summary/tab-summary.js';
 import {
   FailingTestInfo,
   FailuresSummaryInfo,
@@ -8,7 +8,7 @@ import {
   HealthinessStats,
   HealthinessSummaryInfo,
   TabSummaryInfo,
-} from '../src/testgrid-dashboard-summary.js';
+} from '../src/components/dashboard-summary/dashboard-summary.js';
 
 export default {
   title: 'Tab summary',

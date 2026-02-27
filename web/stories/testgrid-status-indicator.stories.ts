@@ -1,5 +1,5 @@
 import { html } from 'lit';
-import '../src/testgrid-status-indicator.js';
+import '../src/components/status-indicator/status-indicator.js';
 
 export default {
   title: 'Components/TestgridStatusIndicator',

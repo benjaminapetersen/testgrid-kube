@@ -16,7 +16,8 @@
     "inlineSources": true,
     "rootDir": "./",
     "incremental": true,
-    "strictPropertyInitialization": false
+    "strictPropertyInitialization": false,
+    "types": ["mocha", "node"]
   },
   "include": ["**/*.ts"]
 }
