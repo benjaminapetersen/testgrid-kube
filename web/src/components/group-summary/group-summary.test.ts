@@ -16,7 +16,7 @@ describe('Testgrid Group Summary page', () => {
     // See https://open-wc.org/docs/testing/helpers/#test-a-custom-class-with-properties
     const tagName = defineCE(class extends TestgridGroupSummary {});
     const tag = unsafeStatic(tagName);
-    element = await fixture(html`<${tag} .groupName=${'fake-dashboard-group-1'}></${tag}>`);
+    element = await fixture(html`<${tag} .groupName=${'sig-node'}></${tag}>`);
   });
 
   // TODO - add accessibility tests

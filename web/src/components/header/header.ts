@@ -221,17 +221,16 @@ export class TestgridHeader extends LitElement {
   static styles = [sharedStyles, css`
     :host {
       display: block;
-      font-family: var(--font-family);
     }
 
     .header {
-      background: var(--tg-header-bg);
-      color: var(--tg-header-text);
+      background: linear-gradient(135deg, var(--tg-header-bg) 0%, #2d2d4a 50%, var(--tg-header-bg) 100%);
+      color: var(--tg-text-inverse);
       height: var(--tg-header-height);
       display: flex;
       align-items: center;
       padding: 0 1rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     }
 
     .header-content {
@@ -263,17 +262,24 @@ export class TestgridHeader extends LitElement {
       gap: 0.5rem;
       text-decoration: none;
       color: inherit;
-      font-weight: 600;
-      font-size: 1.25rem;
+      font-weight: var(--font-weight-bold);
+      font-size: var(--font-size-xl);
       flex-shrink: 0;
+      letter-spacing: -0.5px;
     }
 
     .logo:hover {
       opacity: 0.9;
     }
 
+    .logo::before {
+      content: 'grid_view';
+      font-family: 'Material Symbols Outlined';
+      font-size: 28px;
+    }
+
     .search-icon {
-      font-family: 'Material Icons';
+      font-family: 'Material Symbols Outlined';
       font-size: 1.25rem;
     }
 
@@ -281,7 +287,7 @@ export class TestgridHeader extends LitElement {
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      font-size: 0.875rem;
+      font-size: var(--font-size-sm);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -292,7 +298,7 @@ export class TestgridHeader extends LitElement {
     }
 
     .breadcrumb-link {
-      color: var(--tg-header-text);
+      color: var(--tg-text-inverse);
       text-decoration: none;
       opacity: 0.8;
       transition: opacity 0.2s;
@@ -304,8 +310,8 @@ export class TestgridHeader extends LitElement {
     }
 
     .breadcrumb-current {
-      color: var(--tg-header-text);
-      font-weight: 500;
+      color: var(--tg-text-inverse);
+      font-weight: var(--font-weight-medium);
     }
 
     .search-container {
@@ -316,13 +322,15 @@ export class TestgridHeader extends LitElement {
       display: flex;
       align-items: center;
       background: rgba(255, 255, 255, 0.1);
-      border-radius: 4px;
-      padding: 0.25rem 0.75rem;
+      border-radius: 6px;
+      padding: 0.35rem 0.75rem;
       transition: background 0.2s;
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .search-wrapper:focus-within {
       background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.3);
     }
 
     .search-icon {
@@ -333,14 +341,16 @@ export class TestgridHeader extends LitElement {
     .search-input {
       background: transparent;
       border: none;
-      color: var(--tg-header-text);
-      font-size: 0.875rem;
+      color: var(--tg-text-inverse);
+      font-size: var(--font-size-sm);
+      font-family: var(--font-family);
       width: 250px;
       outline: none;
     }
 
     .search-input::placeholder {
       color: rgba(255, 255, 255, 0.5);
+      font-family: var(--font-family);
     }
 
     .search-results {
@@ -348,8 +358,8 @@ export class TestgridHeader extends LitElement {
       top: 100%;
       right: 0;
       margin-top: 4px;
-      background: white;
-      border-radius: 4px;
+      background: var(--tg-surface);
+      border-radius: 6px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       min-width: 350px;
       max-height: 400px;
@@ -369,10 +379,11 @@ export class TestgridHeader extends LitElement {
       text-align: left;
       border-bottom: 1px solid var(--tg-border-light);
       transition: background 0.1s;
+      font-family: var(--font-family);
     }
 
     .search-result-item:hover {
-      background: var(--tg-border-light);
+      background: var(--tg-surface-variant);
     }
 
     .search-result-item:last-child {
@@ -380,22 +391,22 @@ export class TestgridHeader extends LitElement {
     }
 
     .result-name {
-      font-size: 0.875rem;
-      color: var(--tg-text);
-      font-weight: 500;
+      font-size: var(--font-size-sm);
+      color: var(--tg-text-primary);
+      font-weight: var(--font-weight-medium);
     }
 
     .result-parent {
-      font-size: 0.75rem;
-      color: #666;
+      font-size: var(--font-size-xs);
+      color: var(--tg-text-tertiary);
       margin-top: 2px;
     }
 
     .search-result-empty {
       padding: 1rem;
-      color: #666;
+      color: var(--tg-text-tertiary);
       text-align: center;
-      font-size: 0.875rem;
+      font-size: var(--font-size-sm);
     }
 
     @media (max-width: 768px) {

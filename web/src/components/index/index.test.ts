@@ -16,42 +16,57 @@ describe('Testgrid Index page', () => {
     element = await fixture(html`<${tag}></${tag}>`);
   });
 
-  it('renders dashboard groups and standalone dashboards', async () => {
-    element.dashboardGroups = {
-      'group-alpha': ['dashboard-1', 'dashboard-2'],
-      'group-beta': ['dashboard-3']
-    };
-    element.ungroupedDashboards = ['standalone-dashboard'];
+  it('renders with a two-column layout', async () => {
     await element.updateComplete;
 
-    const cards = element.shadowRoot!.querySelectorAll('.grid-card');
-    expect(cards).to.have.length(3); // 2 groups + 1 standalone
+    const layout = element.shadowRoot!.querySelector('.index-layout');
+    expect(layout).to.exist;
+
+    const sidebar = element.shadowRoot!.querySelector('.sidebar');
+    expect(sidebar).to.exist;
+
+    const mainContent = element.shadowRoot!.querySelector('.main-content');
+    expect(mainContent).to.exist;
   });
 
-  it('shows dashboard tooltips for groups', async () => {
-    element.dashboardGroups = {
-      'group-alpha': ['dashboard-1', 'dashboard-2'],
-    };
-    element.ungroupedDashboards = ['standalone-dashboard'];
+  it('shows API status card', async () => {
     await element.updateComplete;
 
-    const groupCard = element.shadowRoot!.querySelector('.grid-card.dashboard-group');
-    expect(groupCard).to.exist;
+    const apiCard = element.shadowRoot!.querySelector('.info-card.api-status');
+    expect(apiCard).to.exist;
 
-    const tooltip = groupCard!.querySelector('.dashboard-tooltip');
-    expect(tooltip).to.exist;
+    const cardHeader = apiCard!.querySelector('.card-header h3');
+    expect(cardHeader?.textContent).to.equal('API Connection');
+  });
 
-    const listItems = tooltip!.querySelectorAll('md-list-item');
-    expect(listItems).to.have.length(2);
+  it('shows statistics card', async () => {
+    await element.updateComplete;
 
-    const dashboardTexts = Array.from(listItems).map(item =>
-      item.querySelector('p')?.textContent
-    );
-    expect(dashboardTexts).to.include('dashboard-1');
-    expect(dashboardTexts).to.include('dashboard-2');
+    const statsCard = element.shadowRoot!.querySelector('.info-card.stats');
+    expect(statsCard).to.exist;
 
-    const standaloneCard = element.shadowRoot!.querySelector('.grid-card:not(.dashboard-group)');
-    expect(standaloneCard).to.exist;
-    expect(standaloneCard!.querySelector('.dashboard-tooltip')).to.not.exist;
+    const statsGrid = statsCard!.querySelector('.stats-grid');
+    expect(statsGrid).to.exist;
+
+    const statItems = statsCard!.querySelectorAll('.stat-item');
+    expect(statItems).to.have.length(3);
+  });
+
+  it('shows getting started card', async () => {
+    await element.updateComplete;
+
+    const gettingStartedCard = element.shadowRoot!.querySelector('.info-card.getting-started');
+    expect(gettingStartedCard).to.exist;
+
+    const tips = gettingStartedCard!.querySelectorAll('.tips-list li');
+    expect(tips.length).to.be.greaterThan(0);
+  });
+
+  it('has a search/filter input in sidebar', async () => {
+    await element.updateComplete;
+
+    const searchInput = element.shadowRoot!.querySelector('.search-input');
+    expect(searchInput).to.exist;
+    expect(searchInput!.getAttribute('placeholder')).to.equal('Filter groups...');
   });
 });
