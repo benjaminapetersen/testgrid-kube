@@ -8,7 +8,7 @@ import '@material/web/icon/icon.js';
  * TestGrid-styled collapsible section component.
  * Extends the generic md-collapsible with TestGrid-specific styling.
  *
- * @slot header - Content for the header (label, icons, etc.)
+ * @slot header-content - Content for the header (label, icons, etc.)
  * @slot - Default slot for the collapsible content
  *
  * @fires toggle - Fired when expanded state changes. Detail: { expanded: boolean }
@@ -16,7 +16,7 @@ import '@material/web/icon/icon.js';
  * @example
  * ```html
  * <tg-collapsible .badgeCount=${5}>
- *   <span slot="header">Section Title</span>
+ *   <span slot="header-content">Section Title</span>
  *   <div>Content goes here...</div>
  * </tg-collapsible>
  * ```
@@ -47,7 +47,7 @@ export class TgCollapsible extends MdCollapsible {
         >
           <md-icon class="chevron">${this.expanded ? this.expandedIcon : this.collapsedIcon}</md-icon>
           <span class="header-content">
-            <slot name="header">${this.headerText}</slot>
+            <slot name="header-content">${this.headerText}</slot>
           </span>
           ${this.badgeCount !== undefined ? html`
             <span class="badge">${this.badgeCount}</span>

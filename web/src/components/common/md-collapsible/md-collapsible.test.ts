@@ -61,12 +61,12 @@ describe('md-collapsible', () => {
   it('renders slotted header content', async () => {
     const el = await fixture<MdCollapsible>(html`
       <md-collapsible>
-        <span slot="header">Slotted Header</span>
+        <span slot="header-content">Slotted Header</span>
         <p>Content</p>
       </md-collapsible>
     `);
 
-    const headerSlot = el.shadowRoot!.querySelector('slot[name="header"]') as HTMLSlotElement;
+    const headerSlot = el.shadowRoot!.querySelector('slot[name="header-content"]') as HTMLSlotElement;
     const assignedNodes = headerSlot.assignedNodes();
     expect(assignedNodes.length).to.equal(1);
     expect((assignedNodes[0] as HTMLElement).textContent).to.equal('Slotted Header');
@@ -86,12 +86,12 @@ describe('md-collapsible', () => {
   it('renders slotted header with HTML styling', async () => {
     const el = await fixture<MdCollapsible>(html`
       <md-collapsible>
-        <span slot="header"><strong>Bold</strong> and <em>italic</em></span>
+        <span slot="header-content"><strong>Bold</strong> and <em>italic</em></span>
         <p>Content</p>
       </md-collapsible>
     `);
 
-    const headerSlot = el.shadowRoot!.querySelector('slot[name="header"]') as HTMLSlotElement;
+    const headerSlot = el.shadowRoot!.querySelector('slot[name="header-content"]') as HTMLSlotElement;
     const assignedNodes = headerSlot.assignedNodes();
     expect(assignedNodes.length).to.equal(1);
 
@@ -131,29 +131,29 @@ describe('md-collapsible', () => {
     expect(icon?.textContent?.trim()).to.equal('▼');
   });
 
-  it('supports custom icon slot', async () => {
+  it('supports custom header-start slot', async () => {
     const el = await fixture<MdCollapsible>(html`
       <md-collapsible headerText="Test">
-        <span slot="icon">+</span>
+        <span slot="header-start">+</span>
         <p>Content</p>
       </md-collapsible>
     `);
 
-    const iconSlot = el.shadowRoot!.querySelector('slot[name="icon"]') as HTMLSlotElement;
+    const iconSlot = el.shadowRoot!.querySelector('slot[name="header-start"]') as HTMLSlotElement;
     const assignedNodes = iconSlot.assignedNodes();
     expect(assignedNodes.length).to.equal(1);
     expect((assignedNodes[0] as HTMLElement).textContent).to.equal('+');
   });
 
-  it('supports trailing slot', async () => {
+  it('supports header-end slot', async () => {
     const el = await fixture<MdCollapsible>(html`
       <md-collapsible headerText="Test">
-        <span slot="trailing">Badge</span>
+        <span slot="header-end">Badge</span>
         <p>Content</p>
       </md-collapsible>
     `);
 
-    const trailingSlot = el.shadowRoot!.querySelector('slot[name="trailing"]') as HTMLSlotElement;
+    const trailingSlot = el.shadowRoot!.querySelector('slot[name="header-end"]') as HTMLSlotElement;
     const assignedNodes = trailingSlot.assignedNodes();
     expect(assignedNodes.length).to.equal(1);
     expect((assignedNodes[0] as HTMLElement).textContent).to.equal('Badge');
@@ -206,5 +206,184 @@ describe('md-collapsible', () => {
 
     // The parent's toggle handler should NOT have been called
     expect(parentHandlerCalled).to.be.false;
+  });
+
+  describe('collapseWithChildren', () => {
+    it('collapses parent with collapseWithChildren when child is collapsed', async () => {
+      const wrapper = await fixture(html`
+        <div>
+          <md-collapsible id="parent" headerText="Parent" expanded collapseWithChildren>
+            <md-collapsible id="child" headerText="Child" expanded>
+              <p>Content</p>
+            </md-collapsible>
+          </md-collapsible>
+        </div>
+      `);
+
+      const parent = wrapper.querySelector('#parent') as MdCollapsible;
+      const child = wrapper.querySelector('#child') as MdCollapsible;
+
+      expect(parent.expanded).to.be.true;
+      expect(child.expanded).to.be.true;
+
+      // Collapse the child
+      const childButton = child.shadowRoot!.querySelector('.header') as HTMLButtonElement;
+      childButton.click();
+      await child.updateComplete;
+      await parent.updateComplete;
+
+      // Both should be collapsed
+      expect(child.expanded).to.be.false;
+      expect(parent.expanded).to.be.false;
+    });
+
+    it('does not collapse parent without collapseWithChildren when child is collapsed', async () => {
+      const wrapper = await fixture(html`
+        <div>
+          <md-collapsible id="parent" headerText="Parent" expanded>
+            <md-collapsible id="child" headerText="Child" expanded>
+              <p>Content</p>
+            </md-collapsible>
+          </md-collapsible>
+        </div>
+      `);
+
+      const parent = wrapper.querySelector('#parent') as MdCollapsible;
+      const child = wrapper.querySelector('#child') as MdCollapsible;
+
+      // Collapse the child
+      const childButton = child.shadowRoot!.querySelector('.header') as HTMLButtonElement;
+      childButton.click();
+      await child.updateComplete;
+      await parent.updateComplete;
+
+      // Only child should be collapsed - parent ignores child collapse by default
+      expect(child.expanded).to.be.false;
+      expect(parent.expanded).to.be.true;
+    });
+
+    it('collapseWithChildren bubbles through multiple opted-in levels', async () => {
+      const wrapper = await fixture(html`
+        <div>
+          <md-collapsible id="grandparent" headerText="Grandparent" expanded collapseWithChildren>
+            <md-collapsible id="parent" headerText="Parent" expanded collapseWithChildren>
+              <md-collapsible id="child" headerText="Child" expanded>
+                <p>Content</p>
+              </md-collapsible>
+            </md-collapsible>
+          </md-collapsible>
+        </div>
+      `);
+
+      const grandparent = wrapper.querySelector('#grandparent') as MdCollapsible;
+      const parent = wrapper.querySelector('#parent') as MdCollapsible;
+      const child = wrapper.querySelector('#child') as MdCollapsible;
+
+      // Collapse the child
+      const childButton = child.shadowRoot!.querySelector('.header') as HTMLButtonElement;
+      childButton.click();
+      await child.updateComplete;
+      await parent.updateComplete;
+      await grandparent.updateComplete;
+
+      // All should be collapsed (all opted in)
+      expect(child.expanded).to.be.false;
+      expect(parent.expanded).to.be.false;
+      expect(grandparent.expanded).to.be.false;
+    });
+
+    it('parent without collapseWithChildren does not collapse even if grandparent has it', async () => {
+      const wrapper = await fixture(html`
+        <div>
+          <md-collapsible id="grandparent" headerText="Grandparent" expanded collapseWithChildren>
+            <md-collapsible id="parent" headerText="Parent" expanded>
+              <md-collapsible id="child" headerText="Child" expanded>
+                <p>Content</p>
+              </md-collapsible>
+            </md-collapsible>
+          </md-collapsible>
+        </div>
+      `);
+
+      const grandparent = wrapper.querySelector('#grandparent') as MdCollapsible;
+      const parent = wrapper.querySelector('#parent') as MdCollapsible;
+      const child = wrapper.querySelector('#child') as MdCollapsible;
+
+      // Collapse the child
+      const childButton = child.shadowRoot!.querySelector('.header') as HTMLButtonElement;
+      childButton.click();
+      await child.updateComplete;
+      await parent.updateComplete;
+      await grandparent.updateComplete;
+
+      // Child collapsed, parent doesn't have opt-in so stays expanded
+      // Grandparent also receives the event and collapses
+      expect(child.expanded).to.be.false;
+      expect(parent.expanded).to.be.true;
+      expect(grandparent.expanded).to.be.false;
+    });
+
+    it('does not trigger when expanding', async () => {
+      const wrapper = await fixture(html`
+        <div>
+          <md-collapsible id="parent" headerText="Parent" expanded collapseWithChildren>
+            <md-collapsible id="child" headerText="Child">
+              <p>Content</p>
+            </md-collapsible>
+          </md-collapsible>
+        </div>
+      `);
+
+      const parent = wrapper.querySelector('#parent') as MdCollapsible;
+      const child = wrapper.querySelector('#child') as MdCollapsible;
+
+      expect(child.expanded).to.be.false;
+      expect(parent.expanded).to.be.true;
+
+      // Expand the child
+      const childButton = child.shadowRoot!.querySelector('.header') as HTMLButtonElement;
+      childButton.click();
+      await child.updateComplete;
+      await parent.updateComplete;
+
+      // Both should be expanded (only triggers on collapse, not expand)
+      expect(child.expanded).to.be.true;
+      expect(parent.expanded).to.be.true;
+    });
+
+    it('only affects opted-in parents, not siblings', async () => {
+      const wrapper = await fixture(html`
+        <div>
+          <md-collapsible id="parent" headerText="Parent" expanded collapseWithChildren>
+            <md-collapsible id="sibling1" headerText="Sibling 1" expanded>
+              <p>Content</p>
+            </md-collapsible>
+            <md-collapsible id="sibling2" headerText="Sibling 2" expanded>
+              <p>Content</p>
+            </md-collapsible>
+            <md-collapsible id="sibling3" headerText="Sibling 3" expanded>
+              <p>Content</p>
+            </md-collapsible>
+          </md-collapsible>
+        </div>
+      `);
+
+      const parent = wrapper.querySelector('#parent') as MdCollapsible;
+      const sibling1 = wrapper.querySelector('#sibling1') as MdCollapsible;
+      const sibling2 = wrapper.querySelector('#sibling2') as MdCollapsible;
+      const sibling3 = wrapper.querySelector('#sibling3') as MdCollapsible;
+
+      // Collapse sibling2
+      const sibling2Button = sibling2.shadowRoot!.querySelector('.header') as HTMLButtonElement;
+      sibling2Button.click();
+      await sibling2.updateComplete;
+      await parent.updateComplete;
+
+      // sibling2 and parent collapsed, but siblings 1 and 3 remain expanded
+      expect(sibling2.expanded).to.be.false;
+      expect(parent.expanded).to.be.false;
+      expect(sibling1.expanded).to.be.true;
+      expect(sibling3.expanded).to.be.true;
+    });
   });
 });

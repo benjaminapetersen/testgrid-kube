@@ -17,18 +17,44 @@ import { customElement, property, state } from 'lit/decorators.js';
  * - `--md-sys-state-focus-opacity`: Focus state layer opacity
  * - `--md-sys-state-pressed-opacity`: Pressed state layer opacity
  *
- * @slot header - Content for the header (label, icons, etc.)
- * @slot icon - Custom expand/collapse icon
- * @slot trailing - Trailing content (badges, actions, etc.)
+ * Nested Collapsible Behavior:
+ * - By default, nested collapsibles operate independently
+ * - Set `collapseWithChildren` on a parent to collapse when any descendant collapses
+ *
+ * @slot header-start - Leading content in header (custom expand/collapse icon)
+ * @slot header-content - Main header content (label, title, etc.)
+ * @slot header-end - Trailing content in header (badges, counts, actions)
  * @slot - Default slot for the collapsible content
  *
  * @fires toggle - Fired when expanded state changes. Detail: { expanded: boolean }
+ * @fires md-collapsible-collapsed - Fired when collapsed (bubbles). Used internally for nested collapse.
  *
  * @example
  * ```html
  * <md-collapsible>
- *   <span slot="header">Section Title</span>
+ *   <span slot="header-content">Section Title</span>
  *   <div>Content goes here...</div>
+ * </md-collapsible>
+ * ```
+ *
+ * @example With all header slots
+ * ```html
+ * <md-collapsible>
+ *   <md-icon slot="header-start">folder</md-icon>
+ *   <span slot="header-content">Section Title</span>
+ *   <span slot="header-end">5 items</span>
+ *   <div>Content goes here...</div>
+ * </md-collapsible>
+ * ```
+ *
+ * @example Nested with parent collapse
+ * ```html
+ * <md-collapsible collapseWithChildren>
+ *   <span slot="header-content">Parent (collapses with children)</span>
+ *   <md-collapsible>
+ *     <span slot="header-content">Child</span>
+ *     <p>Child content...</p>
+ *   </md-collapsible>
  * </md-collapsible>
  * ```
  */
@@ -46,18 +72,65 @@ export class MdCollapsible extends LitElement {
   @property({ type: Boolean, reflect: true })
   disabled = false;
 
+  /**
+   * When true, this collapsible will collapse when any of its descendant
+   * collapsibles collapse. By default, nested collapsibles operate independently.
+   */
+  @property({ type: Boolean, reflect: true })
+  collapseWithChildren = false;
+
   @state()
   private animating = false;
 
+  connectedCallback() {
+    super.connectedCallback();
+    this.addEventListener('md-collapsible-collapsed', this.didChildCollapse as EventListener);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.removeEventListener('md-collapsible-collapsed', this.didChildCollapse as EventListener);
+  }
+
+  private didChildCollapse = (event: CustomEvent) => {
+    // Don't handle our own event
+    if (event.target === this) return;
+
+    // Only collapse if we've opted in
+    if (!this.collapseWithChildren) return;
+
+    // Collapse this parent
+    if (this.expanded) {
+      this.expanded = false;
+      this.animating = true;
+      this.dispatchEvent(new CustomEvent('toggle', {
+        detail: { expanded: false },
+        bubbles: false,
+        composed: true
+      }));
+    }
+  };
+
   protected toggle() {
     if (this.disabled) return;
+
+    const wasExpanded = this.expanded;
     this.expanded = !this.expanded;
     this.animating = true;
+
     this.dispatchEvent(new CustomEvent('toggle', {
       detail: { expanded: this.expanded },
       bubbles: false,  // Don't bubble to prevent nested collapsibles from triggering parent handlers
       composed: true
     }));
+
+    // If collapsing, dispatch bubbling event for parent collapsibles to optionally handle
+    if (wasExpanded && !this.expanded) {
+      this.dispatchEvent(new CustomEvent('md-collapsible-collapsed', {
+        bubbles: true,
+        composed: true
+      }));
+    }
   }
 
   private handleAnimationEnd() {
@@ -74,13 +147,13 @@ export class MdCollapsible extends LitElement {
           aria-expanded=${this.expanded}
           ?disabled=${this.disabled}
         >
-          <slot name="icon">
+          <slot name="header-start">
             <span class="default-icon" aria-hidden="true">${this.expanded ? '▼' : '▶'}</span>
           </slot>
           <span class="header-content">
-            <slot name="header">${this.headerText}</slot>
+            <slot name="header-content">${this.headerText}</slot>
           </span>
-          <slot name="trailing"></slot>
+          <slot name="header-end"></slot>
         </button>
         <div
           part="content"

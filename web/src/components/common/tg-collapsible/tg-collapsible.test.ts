@@ -84,12 +84,12 @@ describe('tg-collapsible', () => {
   it('renders slotted header content', async () => {
     const el = await fixture<TgCollapsible>(html`
       <tg-collapsible>
-        <span slot="header">Slotted Header</span>
+        <span slot="header-content">Slotted Header</span>
         <p>Content</p>
       </tg-collapsible>
     `);
 
-    const headerSlot = el.shadowRoot!.querySelector('slot[name="header"]') as HTMLSlotElement;
+    const headerSlot = el.shadowRoot!.querySelector('slot[name="header-content"]') as HTMLSlotElement;
     const assignedNodes = headerSlot.assignedNodes();
     expect(assignedNodes.length).to.equal(1);
     expect((assignedNodes[0] as HTMLElement).textContent).to.equal('Slotted Header');
