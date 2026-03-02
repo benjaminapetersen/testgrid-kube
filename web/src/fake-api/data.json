@@ -1,13 +1,13 @@
 {
   "dashboards": {
     "dashboards": [
-      {"name":"fake-dashboard-1", "link":"dashboards/fake-dashboard-1", "dashboard_group_name":"fake-dashboard-group-1"},
-      {"name":"fake-dashboard-2", "link":"dashboards/fake-dashboard-2", "dashboard_group_name":"fake-dashboard-group-1"},
-      {"name":"fake-dashboard-3", "link":"dashboards/fake-dashboard-3", "dashboard_group_name":"fake-dashboard-group-1"},
-      {"name":"fake-dashboard-4", "link":"dashboards/fake-dashboard-4", "dashboard_group_name":"fake-dashboard-group-2"},
-      {"name":"fake-dashboard-5", "link":"dashboards/fake-dashboard-5", "dashboard_group_name":"fake-dashboard-group-2"},
-      {"name":"fake-dashboard-6", "link":"dashboards/fake-dashboard-6", "dashboard_group_name":"fake-dashboard-group-3"},
-      {"name":"fake-dashboard-7", "link":"dashboards/fake-dashboard-7", "dashboard_group_name":"fake-dashboard-group-3"},
+      {"name":"fake-dashboard-1", "link":"dashboards/fake-dashboard-1", "dashboard_group_name":"sig-node"},
+      {"name":"fake-dashboard-2", "link":"dashboards/fake-dashboard-2", "dashboard_group_name":"sig-node"},
+      {"name":"fake-dashboard-3", "link":"dashboards/fake-dashboard-3", "dashboard_group_name":"sig-node"},
+      {"name":"fake-dashboard-4", "link":"dashboards/fake-dashboard-4", "dashboard_group_name":"google-gce"},
+      {"name":"fake-dashboard-5", "link":"dashboards/fake-dashboard-5", "dashboard_group_name":"google-gce"},
+      {"name":"fake-dashboard-6", "link":"dashboards/fake-dashboard-6", "dashboard_group_name":"conformance"},
+      {"name":"fake-dashboard-7", "link":"dashboards/fake-dashboard-7", "dashboard_group_name":"conformance"},
       {"name":"fake-dashboard-8", "link":"dashboards/fake-dashboard-8"},
       {"name":"fake-dashboard-9", "link":"dashboards/fake-dashboard-9"},
       {"name":"fake-dashboard-10", "link":"dashboards/fake-dashboard-10"}
@@ -15,31 +15,36 @@
   },
   "dashboard-groups": {
     "dashboard_groups": [
-      {"name":"fake-dashboard-group-1", "link":"dashboard-groups/fake-dashboard-group-1"},
-      {"name":"fake-dashboard-group-2", "link":"dashboard-groups/fake-dashboard-group-2"},
-      {"name":"fake-dashboard-group-3", "link":"dashboard-groups/fake-dashboard-group-3"}
+      {"name":"sig-node", "link":"dashboard-groups/sig-node"},
+      {"name":"sig-network", "link":"dashboard-groups/sig-network"},
+      {"name":"google-gce", "link":"dashboard-groups/google-gce"},
+      {"name":"aws-eks", "link":"dashboard-groups/aws-eks"},
+      {"name":"conformance", "link":"dashboard-groups/conformance"},
+      {"name":"wg-reliability", "link":"dashboard-groups/wg-reliability"},
+      {"name":"redhat-openshift", "link":"dashboard-groups/redhat-openshift"},
+      {"name":"ci-kubernetes", "link":"dashboard-groups/ci-kubernetes"}
     ]
   },
-  "fake-dashboard-group-1-dashboards": {
+  "sig-node-dashboards": {
     "dashboards": [
       {"name":"fake-dashboard-1", "link":"dashboards/fake-dashboard-1"},
       {"name":"fake-dashboard-2", "link":"dashboards/fake-dashboard-2"},
       {"name":"fake-dashboard-3", "link":"dashboards/fake-dashboard-3"}
     ]
   },
-  "fake-dashboard-group-2-dashboards": {
+  "google-gce-dashboards": {
     "dashboards": [
       {"name":"fake-dashboard-4", "link":"dashboards/fake-dashboard-4"},
       {"name":"fake-dashboard-5", "link":"dashboards/fake-dashboard-5"}
     ]
   },
-  "fake-dashboard-group-3-dashboards": {
+  "conformance-dashboards": {
     "dashboards": [
       {"name":"fake-dashboard-6", "link":"dashboards/fake-dashboard-6"},
       {"name":"fake-dashboard-7", "link":"dashboards/fake-dashboard-7"}
     ]
   },
-  "fake-dashboard-group-1-dashboard-summaries": {
+  "sig-node-dashboard-summaries": {
     "dashboard_summaries": [
       {
         "name":"fake-dashboard-1",
@@ -68,7 +73,7 @@
       }
     ]
   },
-  "fake-dashboard-group-2-dashboard-summaries": {
+  "google-gce-dashboard-summaries": {
     "dashboard_summaries": [
       {
         "name":"fake-dashboard-4",
@@ -88,7 +93,7 @@
       }
     ]
   },
-  "fake-dashboard-group-3-dashboard-summaries": {
+  "conformance-dashboard-summaries": {
     "dashboard_summaries": [
       {
         "name":"fake-dashboard-6",
