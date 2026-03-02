@@ -207,7 +207,7 @@ export class TestgridIndex extends LitElement {
         .badgeCount=${totalGroups}
         @toggle=${(e: CustomEvent) => this.groupsSectionExpanded = e.detail.expanded}
       >
-        <span slot="header" class="section-header">
+        <span slot="header-content" class="section-header">
           <md-icon>folder</md-icon>
           Dashboard Groups
         </span>
@@ -223,7 +223,7 @@ export class TestgridIndex extends LitElement {
           .badgeCount=${filteredUngrouped.length}
           @toggle=${(e: CustomEvent) => this.standaloneSectionExpanded = e.detail.expanded}
         >
-          <span slot="header" class="section-header">
+          <span slot="header-content" class="section-header">
             <md-icon>dashboard</md-icon>
             Standalone Dashboards
           </span>
@@ -251,7 +251,7 @@ export class TestgridIndex extends LitElement {
         .badgeCount=${category.groups.length}
         @toggle=${(e: CustomEvent) => this.toggleCategory(category.id, e.detail.expanded)}
       >
-        <span slot="header" class="category-header">
+        <span slot="header-content" class="category-header">
           <md-icon>${category.icon}</md-icon>
           <span class="category-name">${category.label}</span>
         </span>
@@ -275,7 +275,7 @@ export class TestgridIndex extends LitElement {
         .badgeCount=${group.dashboards.length}
         @toggle=${(e: CustomEvent) => this.toggleGroup(group.name, e.detail.expanded)}
       >
-        <span slot="header" class="group-header">
+        <span slot="header-content" class="group-header">
           <md-icon>folder</md-icon>
           <span class="group-name">${group.name}</span>
         </span>
